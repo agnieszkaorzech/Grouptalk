@@ -1,4 +1,4 @@
-package edu.upc.eetac.dsa.grouptalk.entity;
+package edu.upc.eetac.dsa.grouptalk;
 
 
 import edu.upc.eetac.dsa.grouptalk.GrouptalkMediaType;
