@@ -1,12 +1,9 @@
 package edu.upc.eetac.dsa.grouptalk;
 
 
-import edu.upc.eetac.dsa.grouptalk.GrouptalkMediaType;
 import edu.upc.eetac.dsa.grouptalk.dao.StingDAO;
 import edu.upc.eetac.dsa.grouptalk.dao.StingDAOImpl;
 import edu.upc.eetac.dsa.grouptalk.entity.AuthToken;
-import edu.upc.eetac.dsa.grouptalk.entity.Sting;
-import edu.upc.eetac.dsa.grouptalk.entity.StingCollection;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;

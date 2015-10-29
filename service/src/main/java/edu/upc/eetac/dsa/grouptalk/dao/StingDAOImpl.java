@@ -1,8 +1,6 @@
 package edu.upc.eetac.dsa.grouptalk.dao;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import edu.upc.eetac.dsa.grouptalk.entity.Sting;
-import edu.upc.eetac.dsa.grouptalk.entity.StingCollection;
 
 import java.sql.*;
 

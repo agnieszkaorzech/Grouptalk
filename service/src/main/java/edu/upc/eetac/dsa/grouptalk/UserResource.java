@@ -3,7 +3,6 @@ package edu.upc.eetac.dsa.grouptalk;
 
 import edu.upc.eetac.dsa.grouptalk.dao.*;
 import edu.upc.eetac.dsa.grouptalk.entity.AuthToken;
-import edu.upc.eetac.dsa.grouptalk.entity.Sting;
 import edu.upc.eetac.dsa.grouptalk.entity.User;
 
 import javax.ws.rs.*;

@@ -1,41 +1,45 @@
 package edu.upc.eetac.dsa.grouptalk.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import edu.upc.eetac.dsa.grouptalk.GrouptalkRootAPIResource;
-import edu.upc.eetac.dsa.grouptalk.LoginResource;
-import edu.upc.eetac.dsa.grouptalk.StingResource;
-import edu.upc.eetac.dsa.grouptalk.UserResource;
+import edu.upc.eetac.dsa.grouptalk.*;
 import org.glassfish.jersey.linking.Binding;
 import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
-
 import java.util.List;
+
 /**
- * Created by Hp on 2015-10-04.
+ * Created by Hp on 2015-10-28.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Sting {
+public class Group {
     @InjectLinks({
             @InjectLink(resource = GrouptalkRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "Grouptalk Root API"),
-            @InjectLink(resource = StingResource.class, style = InjectLink.Style.ABSOLUTE, rel = "current-stings", title = "Current stings"),
-            @InjectLink(resource = StingResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-sting", title = "Create sting", type = MediaType.APPLICATION_FORM_URLENCODED),
-            @InjectLink(resource = StingResource.class, method = "getSting", style = InjectLink.Style.ABSOLUTE, rel = "self sting", title = "Sting", bindings = @Binding(name = "id", value = "${instance.id}")),
+            @InjectLink(resource = GroupResource.class, style = InjectLink.Style.ABSOLUTE, rel = "current-groups", title = "Current groupss"),
+            @InjectLink(resource = GroupResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-groups", title = "Create group", type = MediaType.APPLICATION_FORM_URLENCODED),
+            @InjectLink(resource = GroupResource.class, method = "getGroup", style = InjectLink.Style.ABSOLUTE, rel = "self group", title = "Group", bindings = @Binding(name = "id", value = "${instance.id}")),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
             @InjectLink(resource = UserResource.class, method = "getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", bindings = @Binding(name = "id", value = "${instance.userid}")),
-            @InjectLink(resource = StingResource.class, method = "getStings", style = InjectLink.Style.ABSOLUTE, rel = "next", title = "Newer stings", bindings = {@Binding(name = "timestamp", value = "${instance.creationTimestamp}"), @Binding(name = "before", value = "false")}),
-            @InjectLink(resource = StingResource.class, method = "getStings", style = InjectLink.Style.ABSOLUTE, rel = "previous", title = "Older stings", bindings = {@Binding(name = "timestamp", value = "${instance.creationTimestamp}"), @Binding(name = "before", value = "true")}),
+            @InjectLink(resource = GroupResource.class, method = "getGroups", style = InjectLink.Style.ABSOLUTE, rel = "next", title = "Newer groupss", bindings = {@Binding(name = "timestamp", value = "${instance.creationTimestamp}"), @Binding(name = "before", value = "false")}),
+            @InjectLink(resource = GroupResource.class, method = "getGroups", style = InjectLink.Style.ABSOLUTE, rel = "previous", title = "Older groupss", bindings = {@Binding(name = "timestamp", value = "${instance.creationTimestamp}"), @Binding(name = "before", value = "true")}),
     })
+
+
+
     private List<Link> links;
-    private String id;
+    private Group id;
+
     private String userid;
     private String creator;
-    private String subject;
-    private String content;
+
+    private Group theme;
+    private Group description;
+
     private long creationTimestamp;
     private long lastModified;
+
 
     public List<Link> getLinks() {
         return links;
@@ -45,13 +49,15 @@ public class Sting {
         this.links = links;
     }
 
-    public String getId() {
+    public Group getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Group id) {
         this.id = id;
     }
+
+
 
     public String getUserid() {
         return userid;
@@ -69,20 +75,22 @@ public class Sting {
         this.creator = creator;
     }
 
-    public String getSubject() {
-        return subject;
+
+
+    public Group getTheme() {
+        return theme;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setTheme(Group theme) {
+        this.theme = theme;
     }
 
-    public String getContent() {
-        return content;
+    public Group getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(Group description) {
+        this.description = description;
     }
 
     public long getCreationTimestamp() {
