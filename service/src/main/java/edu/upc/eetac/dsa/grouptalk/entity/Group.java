@@ -29,13 +29,13 @@ public class Group {
 
 
     private List<Link> links;
-    private Group id;
+    private String id;
 
-    private String userid;
+    private String groupid;
     private String creator;
 
-    private Group theme;
-    private Group description;
+    private String theme;
+    private String description;
 
     private long creationTimestamp;
     private long lastModified;
@@ -49,22 +49,22 @@ public class Group {
         this.links = links;
     }
 
-    public Group getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Group id) {
+    public void setId(String id) {
         this.id = id;
     }
 
 
 
-    public String getUserid() {
-        return userid;
+    public String getGroupid() {
+        return groupid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setGroupid(String groupid) {
+        this.groupid = groupid;
     }
 
     public String getCreator() {
@@ -77,19 +77,19 @@ public class Group {
 
 
 
-    public Group getTheme() {
+    public String getTheme() {
         return theme;
     }
 
-    public void setTheme(Group theme) {
+    public void setTheme(String theme) {
         this.theme = theme;
     }
 
-    public Group getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Group description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

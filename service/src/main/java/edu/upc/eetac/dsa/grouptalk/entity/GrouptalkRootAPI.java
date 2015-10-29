@@ -16,10 +16,10 @@ public class GrouptalkRootAPI {
     @InjectLinks({
             @InjectLink(resource = GrouptalkRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "self bookmark home", title = "Grouptalk Root API"),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "login", title = "Login",  type= GrouptalkMediaType.GROUPTALK_AUTH_TOKEN),
-            @InjectLink(resource = StingResource.class, style = InjectLink.Style.ABSOLUTE, rel = "current-stings", title = "Current stings", type= GrouptalkMediaType.GROUPTALK_STING_COLLECTION),
+            @InjectLink(resource = GroupResource.class, style = InjectLink.Style.ABSOLUTE, rel = "current-stings", title = "Current stings", type= GrouptalkMediaType.GROUPTALK_GROUP_COLLECTION),
             @InjectLink(resource = UserResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-user", title = "Register", type= GrouptalkMediaType.GROUPTALK_AUTH_TOKEN),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout", condition="${!empty resource.userid}"),
-            @InjectLink(resource = StingResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-sting", title = "Create sting", condition="${!empty resource.userid}", type=GrouptalkMediaType.GROUPTALK_STING),
+            @InjectLink(resource = GroupResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-sting", title = "Create sting", condition="${!empty resource.userid}", type=GrouptalkMediaType.GROUPTALK_GROUP),
             @InjectLink(resource = UserResource.class, method="getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", condition="${!empty resource.userid}", type= GrouptalkMediaType.GROUPTALK_USER, bindings = @Binding(name = "id", value = "${resource.userid}"))
     }
     )

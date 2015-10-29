@@ -4,6 +4,7 @@ import edu.upc.eetac.dsa.grouptalk.dao.GroupDAO;
 import edu.upc.eetac.dsa.grouptalk.dao.GroupDAOImpl;
 import edu.upc.eetac.dsa.grouptalk.entity.AuthToken;
 import edu.upc.eetac.dsa.grouptalk.entity.Group;
+import edu.upc.eetac.dsa.grouptalk.entity.GroupCollection;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -18,6 +19,8 @@ import java.sql.SQLException;
  */
 @Path("groups")
 public class GroupResource {
+    @Context
+    private SecurityContext securityContext;
     @RolesAllowed("administrator")
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -39,42 +42,47 @@ public class GroupResource {
             throw new InternalServerErrorException();
         }
         URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + group.getId());
-        return Response.created(uri).type(GrouptalkMediaType.GROUPTALK_STING).entity(group).build();
+        return Response.created(uri).type(GrouptalkMediaType.GROUPTALK_GROUP).entity(group).build();
     }
 
 
 
 
-    @GET
-    @Produces(GrouptalkMediaType.GROUPTALK_STING_COLLECTION)
-    public StingCollection getStings(@QueryParam("timestamp") long timestamp, @DefaultValue("true") @QueryParam("before") boolean before) {
-        StingCollection stingCollection = null;
-        StingDAO stingDAO = new StingDAOImpl();
+
+
+
+
+
+    /*@GET
+    @Produces(GrouptalkMediaType.GROUPTALK_GROUP_COLLECTION)
+    public GroupCollection getGroups(@QueryParam("timestamp") long timestamp, @DefaultValue("true") @QueryParam("before") boolean before) {
+        GroupCollection groupCollection = null;
+        GroupDAO groupDAO = new GroupDAOImpl();
         try {
             if (before && timestamp == 0) timestamp = System.currentTimeMillis();
-            stingCollection = stingDAO.getStings(timestamp, before);
+            groupCollection = groupDAO.getGroups(timestamp, before);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
-        return stingCollection;
-    }
+        return groupCollection;
+    }*/
 
 
     @Path("/{id}")
     @GET
-    @Produces(GrouptalkMediaType.GROUPTALK_STING)
-    public Response getSting(@PathParam("id") String id, @Context Request request) {
+    @Produces(GrouptalkMediaType.GROUPTALK_GROUP)
+    public Response getGroup(@PathParam("id") String id, @Context Request request) {
         // Create cache-control
         CacheControl cacheControl = new CacheControl();
-        Sting sting = null;
-        StingDAO stingDAO = new StingDAOImpl();
+        Group group = null;
+        GroupDAO groupDAO = new GroupDAOImpl();
         try {
-            sting = stingDAO.getStingById(id);
-            if (sting == null)
-                throw new NotFoundException("Sting with id = " + id + " doesn't exist");
+            group = groupDAO.getGroupById(id);
+            if (group == null)
+                throw new NotFoundException("Group with id = " + id + " doesn't exist");
 
             // Calculate the ETag on last modified date of user resource
-            EntityTag eTag = new EntityTag(Long.toString(sting.getLastModified()));
+            EntityTag eTag = new EntityTag(Long.toString(group.getLastModified()));
 
             // Verify if it matched with etag available in http request
             Response.ResponseBuilder rb = request.evaluatePreconditions(eTag);
@@ -88,7 +96,7 @@ public class GroupResource {
             // If rb is null then either it is first time request; or resource is
             // modified
             // Get the updated representation and return with Etag attached to it
-            rb = Response.ok(sting).cacheControl(cacheControl).tag(eTag);
+            rb = Response.ok(group).cacheControl(cacheControl).tag(eTag);
             return rb.build();
         } catch (SQLException e) {
             throw new InternalServerErrorException();
@@ -97,58 +105,43 @@ public class GroupResource {
 
 
 
-    /*@Path("/{id}")
-    @GET
-    @Produces(BeeterMediaType.BEETER_STING)
-    public Sting getSting(@PathParam("id") String id){
-        Sting sting = null;
-        StingDAO stingDAO = new StingDAOImpl();
-        try {
-            sting = stingDAO.getStingById(id);
-            if(sting == null)
-                throw new NotFoundException("Sting with id = "+id+" doesn't exist");
-        } catch (SQLException e) {
-            throw new InternalServerErrorException();
-        }
-        return sting;
-    }*/
 
     @Path("/{id}")
     @PUT
-    @Consumes(GrouptalkMediaType.GROUPTALK_STING)
-    @Produces(GrouptalkMediaType.GROUPTALK_STING)
-    public Sting updateUSting(@PathParam("id") String id, Sting sting) {
-        if(sting == null)
+    @Consumes(GrouptalkMediaType.GROUPTALK_GROUP)
+    @Produces(GrouptalkMediaType.GROUPTALK_GROUP)
+    public Group updateUGroup(@PathParam("id") String id, Group group) {
+        if(group == null)
             throw new BadRequestException("entity is null");
-        if(!id.equals(sting.getId()))
+        if(!id.equals(group.getId()))
             throw new BadRequestException("path parameter id and entity parameter id doesn't match");
 
         String userid = securityContext.getUserPrincipal().getName();
-        if(!userid.equals(sting.getUserid()))
+        if(!userid.equals(group.getGroupid()))
             throw new ForbiddenException("operation not allowed");
 
-        StingDAO stingDAO = new StingDAOImpl();
+        GroupDAO groupDAO = new GroupDAOImpl();
         try {
-            sting = stingDAO.updateSting(id, sting.getTheme(), sting.getDescription());
-            if(sting == null)
-                throw new NotFoundException("Sting with id = "+id+" doesn't exist");
+            group = groupDAO.updateGroup(id, group.getTheme(), group.getDescription());
+            if(group == null)
+                throw new NotFoundException("Group with id = "+id+" doesn't exist");
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
-        return sting;
+        return group;
     }
 
     @Path("/{id}")
     @DELETE
-    public void deleteSting(@PathParam("id") String id) {
+    public void deleteGroup(@PathParam("id") String id) {
         String userid = securityContext.getUserPrincipal().getName();
-        StingDAO stingDAO = new StingDAOImpl();
+        GroupDAO groupDAO = new GroupDAOImpl();
         try {
-            String ownerid = stingDAO.getStingById(id).getUserid();
+            String ownerid = groupDAO.getGroupById(id).getGroupid();
             if(!userid.equals(ownerid))
                 throw new ForbiddenException("operation not allowed");
-            if(!stingDAO.deleteSting(id))
-                throw new NotFoundException("Sting with id = "+id+" doesn't exist");
+            if(!groupDAO.deleteGroup(id))
+                throw new NotFoundException("Group with id = "+id+" doesn't exist");
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
@@ -160,32 +153,5 @@ public class GroupResource {
 
 
 
-    /*@GET
-    @Produces(BeeterMediaType.BEETER_STING_COLLECTION)
-    public StingCollection getStings(){
-        StingCollection stingCollection = null;
-        StingDAO stingDAO = new StingDAOImpl();
-        try {
-            stingCollection = stingDAO.getStings();
-        } catch (SQLException e) {
-            throw new InternalServerErrorException();
-        }
-
-        return stingCollection;
-    }*/
-
-    /*@GET
-    @Produces(BeeterMediaType.BEETER_STING_COLLECTION)
-    public StingCollection getStings(@QueryParam("before")long before){
-        StingCollection stingCollection = null;
-        StingDAO stingDAO = new StingDAOImpl();
-        try {
-            if(before == 0) before = System.currentTimeMillis();
-            stingCollection = stingDAO.getStings(before);
-        } catch (SQLException e) {
-            throw new InternalServerErrorException();
-        }
-        return stingCollection;
-    }*/
 
 
